@@ -63,7 +63,6 @@ export default {
           return true
         }
       })
-      // return this.coaches
     }
   },
   methods: {
