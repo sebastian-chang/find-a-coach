@@ -1,13 +1,52 @@
 <template>
-  <h1>REQUESTS</h1>
+  <section>
+    <base-card>
+      <header>
+        <h2>Request Received</h2>
+      </header>
+      <ul v-if="hasRequests">
+        <request-item
+          v-for="req in requests"
+          :key="req.id"
+          :email="req.userEmail"
+          :message="req.message"
+        ></request-item>
+      </ul>
+      <h3>You haven't received any requests yet!</h3>
+    </base-card>
+  </section>
 </template>
 
 <script>
-export default {
+import { mapGetters } from 'vuex'
+import RequestItem from '../../components/requests/RequestItem'
 
+export default {
+  components: {
+    RequestItem,
+  },
+  computed: {
+    ...mapGetters({
+      requests: 'requests/requests',
+      hasRequests: 'requests/hasRequests'
+    }),
+  }
 }
 </script>
 
-<style>
+<style scoped>
+header {
+  text-align: center;
+}
 
+ul {
+  list-style: none;
+  margin: 2rem auto;
+  padding: 0;
+  max-width: 30rem;
+}
+
+h3 {
+  text-align: center;
+}
 </style>
