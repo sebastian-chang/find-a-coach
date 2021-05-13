@@ -1,10 +1,14 @@
 <template>
+  <base-dialog :show="!!error" title="Fetch Error" @close="handleError">
+    <p>{{ error }}</p>
+  </base-dialog>
   <section>
     <base-card>
       <header>
         <h2>Request Received</h2>
       </header>
-      <ul v-if="hasRequests">
+      <base-spinner v-if="isLoading"></base-spinner>
+      <ul v-else-if="!isLoading && hasRequests">
         <request-item
           v-for="req in requests"
           :key="req.id"
@@ -12,24 +16,56 @@
           :message="req.message"
         ></request-item>
       </ul>
-      <h3>You haven't received any requests yet!</h3>
+      <h3 v-else>You haven't received any requests yet!</h3>
     </base-card>
   </section>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import RequestItem from '../../components/requests/RequestItem'
 
 export default {
   components: {
     RequestItem,
   },
+  data () {
+    return {
+      isLoading: false,
+      error: null,
+    }
+  },
   computed: {
     ...mapGetters({
       requests: 'requests/requests',
       hasRequests: 'requests/hasRequests'
     }),
+  },
+  methods: {
+    ...mapActions({
+      getRequests: 'requests/getRequests'
+    }),
+    async loadRequests () {
+      console.log('loading', this.isLoading)
+      this.isLoading = true
+      console.log('loading', this.isLoading)
+      try {
+        // await this.$store.dispatch['requests/getRequests']
+        await this.getRequests()
+        console.log('here')
+      }
+      catch (err) {
+        this.error = err.message || 'Something went wrong!'
+      }
+      this.isLoading = false
+      console.log('loading', this.isLoading)
+    },
+    handleError () {
+      this.error = null
+    }
+  },
+  created () {
+    this.loadRequests()
   }
 }
 </script>

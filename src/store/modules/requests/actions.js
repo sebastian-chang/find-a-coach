@@ -1,12 +1,51 @@
 export default {
-  contactCoach (context, payload) {
+  async contactCoach (context, payload) {
     const newRequest = {
-      id: new Date().toISOString(),
-      coachId: payload.coachId,
       userEmail: payload.email,
       message: payload.message,
     }
 
+    const res = await fetch(`https://udemy-vue-firebase-sites-4bbfc-default-rtdb.firebaseio.com/requests/${payload.coachId}.json`, {
+      method: 'POST',
+      body: JSON.stringify(newRequest)
+    })
+    const responseData = await res.data()
+
+    if (!res.ok) {
+      const error = new Error(responseData.message || 'Failed to send request.')
+      throw error
+    }
+
+    newRequest.id = responseData.name
+    newRequest.coachId = payload.coachId
+
     context.commit('addRequest', newRequest)
+  },
+  async getRequests (context) {
+    const coachId = context.rootGetters.userId
+    console.log('her!e')
+    const res = await fetch(`https://udemy-vue-firebase-sites-4bbfc-default-rtdb.firebaseio.com/requests/${coachId}.json`)
+    const resData = await res.json()
+    console.log('data', resData)
+
+    if (!res.ok) {
+      const error = new Error(resData.message || 'Failed to get requests')
+      throw error
+    }
+
+    const requests = []
+
+    for (const key in resData) {
+      const request = {
+        id: key,
+        coachId: coachId,
+        userEmail: resData[key].userEmail,
+        message: resData[key].message,
+      }
+
+      requests.push(request)
+    }
+
+    context.commit('setRequest', requests)
   }
 }
