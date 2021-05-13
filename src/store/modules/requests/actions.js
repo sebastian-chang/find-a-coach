@@ -23,10 +23,8 @@ export default {
   },
   async getRequests (context) {
     const coachId = context.rootGetters.userId
-    console.log('her!e')
     const res = await fetch(`https://udemy-vue-firebase-sites-4bbfc-default-rtdb.firebaseio.com/requests/${coachId}.json`)
     const resData = await res.json()
-    console.log('data', resData)
 
     if (!res.ok) {
       const error = new Error(resData.message || 'Failed to get requests')

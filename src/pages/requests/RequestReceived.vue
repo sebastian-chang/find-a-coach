@@ -46,19 +46,15 @@ export default {
       getRequests: 'requests/getRequests'
     }),
     async loadRequests () {
-      console.log('loading', this.isLoading)
       this.isLoading = true
-      console.log('loading', this.isLoading)
       try {
         // await this.$store.dispatch['requests/getRequests']
         await this.getRequests()
-        console.log('here')
       }
       catch (err) {
         this.error = err.message || 'Something went wrong!'
       }
       this.isLoading = false
-      console.log('loading', this.isLoading)
     },
     handleError () {
       this.error = null

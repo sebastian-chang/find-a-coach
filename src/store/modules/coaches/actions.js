@@ -24,7 +24,11 @@ export default {
       id: userId,
     })
   },
-  async loadCoaches (context) {
+  async loadCoaches (context, payload) {
+    if (!context.getters.shouldUpdate && !payload.forceRefresh) {
+      return
+    }
+
     const res = await fetch(`https://udemy-vue-firebase-sites-4bbfc-default-rtdb.firebaseio.com/coaches.json`)
     const responseData = await res.json()
 
@@ -49,5 +53,6 @@ export default {
     }
 
     context.commit('setCoaches', coaches)
+    context.commit('setFetchTimestamp')
   }
 }
