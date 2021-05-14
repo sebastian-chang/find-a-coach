@@ -23,7 +23,8 @@ export default {
   },
   async getRequests (context) {
     const coachId = context.rootGetters.userId
-    const res = await fetch(`https://udemy-vue-firebase-sites-4bbfc-default-rtdb.firebaseio.com/requests/${coachId}.json`)
+    const token = context.rootGetters.token
+    const res = await fetch(`https://udemy-vue-firebase-sites-4bbfc-default-rtdb.firebaseio.com/requests/${coachId}.json?auth=${token}`)
     const resData = await res.json()
 
     if (!res.ok) {

@@ -12,9 +12,14 @@
           <base-button mode="outline" @click="loadCoaches(true)"
             >Refresh</base-button
           >
-          <base-button link to="/register" v-if="!isCoach && !isLoading"
-            >Register as Coach</base-button
+          <base-button v-if="!isLoggedIn" link to="/auth?redirect=register">Login to Register</base-button>
+          <base-button
+            link
+            to="/register"
+            v-if="!isCoach && !isLoading && isLoggedIn"
           >
+            Register as Coach
+          </base-button>
         </div>
         <div v-if="isLoading">
           <base-spinner></base-spinner>
@@ -62,7 +67,8 @@ export default {
     ...mapGetters({
       isCoach: 'coaches/isCoach',
       coaches: 'coaches/coaches',
-      storeCoaches: 'coaches/hasCoaches'
+      storeCoaches: 'coaches/hasCoaches',
+      isLoggedIn: 'isAuth',
     }),
     hasCoaches () {
       return !this.isLoading && this.storeCoaches
@@ -80,7 +86,7 @@ export default {
           return true
         }
       })
-    }
+    },
   },
   methods: {
     // ...mapActions({

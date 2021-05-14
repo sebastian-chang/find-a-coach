@@ -8,8 +8,9 @@ export default {
       hourlyRate: payload.rate,
       areas: payload.areas,
     }
+    const token = context.rootGetters.token
 
-    const res = await fetch(`https://udemy-vue-firebase-sites-4bbfc-default-rtdb.firebaseio.com/coaches/${userId}.json`, {
+    const res = await fetch(`https://udemy-vue-firebase-sites-4bbfc-default-rtdb.firebaseio.com/coaches/${userId}.json?auth=${token}`, {
       method: 'PUT',
       body: JSON.stringify(coachData)
     })

@@ -12,6 +12,21 @@ import TheHeader from './components/layout/TheHeader'
 export default {
   components: {
     TheHeader,
+  },
+  created () {
+    this.$store.dispatch('autoLogin')
+  },
+  computed: {
+    didAutoLogout () {
+      return this.$store.getters.didAutoLogout
+    }
+  },
+  watch: {
+    didAutoLogout (current, prev) {
+      if (current && current !== prev) {
+        this.$router.replace('/coaches')
+      }
+    }
   }
 }
 </script>
